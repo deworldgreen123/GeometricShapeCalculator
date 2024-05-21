@@ -1,0 +1,15 @@
+﻿WITH table2(REC_ID2, ATTR_VALUE2) AS (
+      SELECT r1.REC_ID, r1.ATTR_VALUE FROM RECORDS as r1
+      WHERE r1.OPR_ID = "DEOVAL" AND r1.ATTR_ID = 2 AND r1.REC_ID in (
+            SELECT r2.REC_ID FROM RECORDS as r2
+            WHERE r2.ATTR_ID = 1 AND r2.ATTR_VALUE = 123 AND r2.REC_ID in (
+                  SELECT r3.REC_ID FROM RECORDS as r3
+                  WHERE r3.ATTR_ID = 4 AND STR_TO_DATE(r3.ATTR_VALUE, '%d.%m.%Y') > STR_TO_DATE('02.01.2022', '%d.%m.%Y')
+            )
+      )
+)
+
+SELECT r1.ATTR_VALUE as "Время выполнения операции", table2.ATTR_VALUE2 as "Овальность"
+FROM RECORDS as r1
+JOIN table2 ON table2.REC_ID2 = r1.REC_ID
+WHERE r1.ATTR_ID = 4
